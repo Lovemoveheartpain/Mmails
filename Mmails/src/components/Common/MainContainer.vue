@@ -15,7 +15,6 @@
 export default {};
 </script>
 
-
 <style lang="" scoped>
 .title_div
 {
