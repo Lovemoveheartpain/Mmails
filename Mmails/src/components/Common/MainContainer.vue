@@ -27,7 +27,5 @@ export default {};
 .title_name {
   font-size: 2.1875rem;
 }
-.main_container {
-}
 
 </style>
