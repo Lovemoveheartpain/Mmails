@@ -18,4 +18,6 @@ export default {
   margin 0px
   list-style none
   text-decoration none
+#app
+  background-color #f3f3f3
 </style>

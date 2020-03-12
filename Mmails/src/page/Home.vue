@@ -119,34 +119,15 @@
 
 <script>
 import HomeLeftVue from "../components/home/HomeLeft.vue";
+import business from "../network/index";
 
 export default {
   components: {
     HomeLeftVue
   },
-  data() {
-    return {
-      pageIndex: "1"
-    };
-  },
-  mounted() {
-    switch (this.$route.path) {
-      case "/":
-        this.pageIndex = "1";
-        break;
-      case "/commodity":
-        this.pageIndex = "2-1";
-        break;
-      case "/category":
-        this.pageIndex = "2-2";
-        break;
-      case "/order":
-        this.pageIndex = "3-1";
-        break;
-      case "/user":
-        this.pageIndex = "4-1";
-      default:
-        break;
+  computed: {
+    pageIndex() {
+      return this.$store.state.initNumber;
     }
   },
   methods: {
@@ -168,7 +149,7 @@ export default {
 h2 {
   padding-left: 0.9375rem;
   font-size: 1.875rem;
-  margin-bottom: .625rem;
+  margin-bottom: 0.625rem;
 }
 .el-header {
   background-color: white;
@@ -191,6 +172,6 @@ h2 {
 }
 .float {
   float: left;
-  margin-right: .625rem;
+  margin-right: 0.625rem;
 }
 </style>

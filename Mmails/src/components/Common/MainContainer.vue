@@ -8,11 +8,16 @@
           <slot name="btn"></slot>
       </div>
     </div>
+    <slot name="container" ></slot>
   </div>
 </template>
 
 <script>
-export default {};
+export default {
+  mounted() {
+    this.$store.commit("setInitNumber", this.$route.path);
+  },
+};
 </script>
 
 <style lang="" scoped>
@@ -26,8 +31,6 @@ export default {};
 }
 .title_name {
   font-size: 2.1875rem;
-}
-.main_container {
 }
 
 </style>
