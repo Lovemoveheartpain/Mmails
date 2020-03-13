@@ -3,7 +3,7 @@ import Router from 'vue-router'
 
 Vue.use(Router)
 
-export default new Router({
+const router = new Router({
   routes: [
     {
       path: '/',
@@ -69,5 +69,22 @@ export default new Router({
     },
 
   ],
-  mode: 'history'
+  mode: 'history',
 })
+
+router.beforeEach((to, from, next) => {
+  let flag = window.localStorage.getItem('user')
+  if (!flag && to.path !== '/login') {
+    next('/login')
+  } else if (to.meta.permission) {  // 如果是管理员权限则可进入，这里只是简单的模拟管理员权限而已
+    flag === 'admin' ? next() : next('/403');
+  } else {
+    if (navigator.userAgent.indexOf("MSIE") > -1 && to.path === '/edit') {
+      alert('当前组件不兼容IE10以下浏览器')
+    } else {
+      next()
+    } //判断是否IE浏览器
+  }
+})
+
+export default router

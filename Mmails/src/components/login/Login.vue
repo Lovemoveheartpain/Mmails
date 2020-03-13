@@ -18,13 +18,8 @@ export default {
     return {
       username: "admin",
       password: "admin",
-      keep: {
-        token: false
-      }
+      keep: window.localStorage.getItem("user")
     };
-  },
-  mounted() {
-    window.localStorage.setItem("keepToken", JSON.stringify(this.keep));
   },
   methods: {
     login() {
@@ -39,12 +34,8 @@ export default {
               this.$message(res.data.msg);
             } else {
               this.$message(res.data.msg);
+              window.localStorage.setItem("user", this.username);
               this.$router.push("/");
-              this.keep.token = true;
-              window.localStorage.setItem(
-                "keepToken",
-                JSON.stringify(this.keep)
-              );
             }
           })
           .catch(err => {

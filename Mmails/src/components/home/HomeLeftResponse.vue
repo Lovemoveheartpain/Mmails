@@ -1,8 +1,7 @@
 <template>
-  <el-aside width="100%">
-    <h2 class="float" style="color:#2DAFCB">HAPPY</h2>
+  <el-aside width="260px" class="hidden-xs-only">
+    <h2 style="color:#2DAFCB">HAPPY</h2>
     <h2 style="color:white">MMALL</h2>
-    <HomeHeaderVue />
     <el-col :span="24">
       <el-menu
         :default-active="pageIndex"
@@ -50,20 +49,13 @@
 </template>
 
 <script>
-import HomeHeaderVue from "./HomeHeader.vue";
 export default {
-  components: {
-    HomeHeaderVue
-  },
   computed: {
     pageIndex() {
       return this.$store.state.initNumber;
     }
   },
   methods: {
-    toLogin() {
-      this.$router.push("/login");
-    },
     toNewRouter(pagename) {
       if (this.$route.path !== pagename) {
         this.$router.push(pagename);
@@ -81,10 +73,7 @@ h2 {
   font-size: 1.875rem;
   margin-bottom: 0.625rem;
 }
-.float {
-  float: left;
-  margin-right: 0.625rem;
-}
+
 .el-aside {
   padding-top: 0.625rem;
   background-color: #2b2e33;

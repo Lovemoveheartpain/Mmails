@@ -2,6 +2,19 @@
   <MainContainerVue>
     <span slot="name">订单管理</span>
     <div slot="container">
+      <el-form :inline="true" :model="formInline">
+        <el-form-item>
+          <el-select v-model="formInline.region" placeholder="按订单号查询">
+            <el-option label="按订单号查询" value="按订单号查询"></el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item>
+          <el-input v-model="formInline.orderId" placeholder="订单号"></el-input>
+        </el-form-item>
+        <el-form-item>
+          <el-button type="primary" @click="onSubmit">查询</el-button>
+        </el-form-item>
+      </el-form>
       <div class="block">
         <el-table :data="orderList" stripe size="small" border>
           <el-table-column prop="orderNo" label="订单号"></el-table-column>
@@ -21,7 +34,7 @@
           :page-sizes="[10, 20, 30, 40]"
           :page-size="currentSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="228"
+          :total="total"
         ></el-pagination>
       </div>
     </div>
@@ -40,9 +53,22 @@ export default {
       currentPage: 1,
       currentSize: 10,
       orderList: [],
+      title: ["订单号", "收件人", "订单状态", "订单总价", "创建时间", "操作"],
+      total: 0,
+      formInline: {
+        orderId: "",
+        region: "按订单号查询"
+      }
     };
   },
   methods: {
+    onSubmit() {
+      console.log(this.formInline.orderId)
+      console.log(this.formInline.region)
+      if(!this.formInline.orderId){
+        
+      }
+    },
     getorderList() {
       business
         .orderList({
@@ -52,6 +78,7 @@ export default {
         .then(res => {
           if (res.data.status === 0) {
             this.orderList = res.data.data.list;
+            this.total = res.data.data.total;
           }
         })
         .catch(err => {

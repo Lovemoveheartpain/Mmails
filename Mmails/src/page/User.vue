@@ -18,7 +18,7 @@
           :page-sizes="[10, 20, 30, 40]"
           :page-size="currentSize"
           layout="total, sizes, prev, pager, next, jumper"
-          :total="179"
+          :total="total"
         ></el-pagination>
       </div>
     </div>
@@ -36,7 +36,8 @@ export default {
     return {
       currentPage: 1,
       currentSize: 10,
-      userList: []
+      userList: [],
+      total: 0
     };
   },
   methods: {
@@ -47,7 +48,7 @@ export default {
           pageSize: this.currentSize
         })
         .then(res => {
-          // console.log(res.data.data.list);
+          console.log(res.data.data);
           if (res.data.status === 0) {
             let newDate = new Date();
             res.data.data.list.forEach(element => {
@@ -55,6 +56,7 @@ export default {
               element.createTime = newDate.toLocaleString();
             });
             this.userList = res.data.data.list;
+            this.total = res.data.data.total;
           }
         })
         .catch(err => {
