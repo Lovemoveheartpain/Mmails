@@ -23,7 +23,11 @@
           <el-table-column prop="payment" label="订单总价"></el-table-column>
           <el-table-column prop="createTime" label="创建时间"></el-table-column>
           <el-table-column align="center" label="操作">
-            <router-link class="toDetails" to="/order/details/110">查看</router-link>
+            <router-link
+              class="toDetails"
+              slot-scope="scope"
+              :to="{path:'/order/details/'+scope.row.orderNo,}"
+            >查看</router-link>
           </el-table-column>
         </el-table>
         <el-pagination
@@ -63,11 +67,26 @@ export default {
   },
   methods: {
     onSubmit() {
-      console.log(this.formInline.orderId)
-      console.log(this.formInline.region)
-      if(!this.formInline.orderId){
-        
+      if (!this.formInline.orderId) {
+        alert("请输入订单号");
+        return;
       }
+      business
+        .orderIdSearch({
+          orderNo: this.formInline.orderId
+        })
+        .then(res => {
+          if (res.data.status == "1") {
+            alert(res.data.msg);
+          } else if (res.data.status == "0") {
+            this.orderList = res.data.data.list;
+            this.total = res.data.data.total;
+          }
+        })
+        .catch(err => {
+          alert("哪里不对了");
+          console.log(err);
+        });
     },
     getorderList() {
       business

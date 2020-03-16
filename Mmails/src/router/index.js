@@ -26,7 +26,7 @@ const router = new Router({
           component: () => import('../components/commodity/AddCommodity.vue'),
         },
         {
-          path: '/commodity/change',
+          path: '/commodity/change/:id',
           name: 'commodity_change',
           component: () => import('../components/commodity/ChangeCommodity.vue'),
         },
@@ -44,6 +44,11 @@ const router = new Router({
           path: '/category/add',
           name: 'category_add',
           component: () => import('../components/category/AddCategory.vue'),
+        },
+        {
+          path: '/category/:id',
+          name: 'subcategory',
+          component: () => import('../components/category/Subcategory.vue'),
         },
         {
           path: '/order',

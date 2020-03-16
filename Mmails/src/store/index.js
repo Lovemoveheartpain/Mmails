@@ -8,24 +8,18 @@ export default new Vuex.Store({
     },
     mutations: {
         setInitNumber(state, value) {
-            switch (value) {
-                case "/":
-                    state.initNumber = "1";
-                    break;
-                case "/commodity":
-                    state.initNumber = "2-1";
-                    break;
-                case "/category":
-                    state.initNumber = "2-2";
-                    break;
-                case "/order":
-                    state.initNumber = "3-1";
-                    break;
-                case "/user":
-                    state.initNumber = "4-1";
-                default:
-                    break;
+            if (value.indexOf("/commodity") != -1) {
+                state.initNumber = "2-1";
+            } else if (value.indexOf("/category") != -1) {
+                state.initNumber = "2-2";
+            } else if (value.indexOf("/order") != -1) {
+                state.initNumber = "3-1";
+            } else if (value.indexOf("/user") != -1) {
+                state.initNumber = "4-1";
+            } else {
+                state.initNumber = "1";
             }
+
         }
     },
     actions: {

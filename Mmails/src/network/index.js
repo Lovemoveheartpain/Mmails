@@ -48,7 +48,7 @@ let getDeepCategory = (value) => {
 }
 //按商品名称查找接口
 let productSearchName = (value) => {
-    return dispatchMethod(config.method.GET, config.path.productSearch, `?productName=${value.productName}`)
+    return dispatchMethod(config.method.GET, config.path.productSearch, `?productName=${value.productName}&&pageSize=${value.pageSize}&&pageNum=${value.pageNum}`)
 }
 //按商品id查找接口
 let productSearchId = (value) => {

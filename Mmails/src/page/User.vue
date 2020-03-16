@@ -48,7 +48,7 @@ export default {
           pageSize: this.currentSize
         })
         .then(res => {
-          console.log(res.data.data);
+          console.log(res.data);
           if (res.data.status === 0) {
             let newDate = new Date();
             res.data.data.list.forEach(element => {

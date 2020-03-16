@@ -3,14 +3,13 @@
     <span slot="name">品类管理</span>
     <el-button slot="btn" type="primary" icon="el-icon-plus" size="mini" @click="toAdd">添加品类</el-button>
     <div slot="container">
-      <div>当前商品分类ID:0</div>
+      <div>当前商品分类ID:{{categoryId}}</div>
       <el-table :data="categoryList" stripe border>
         <el-table-column prop="id" label="品类ID"></el-table-column>
         <el-table-column prop="name" label="品类名称"></el-table-column>
         <el-table-column label="操作">
           <div slot-scope="scope">
             <span class="category_btn" @click="change(scope.row)">修改名称</span>
-            <span class="category_btn" @click="toSubcategory(scope.row.id)">查看其子品类</span>
           </div>
         </el-table-column>
       </el-table>
@@ -19,8 +18,8 @@
 </template>
 
 <script>
-import MainContainerVue from "../components/Common/MainContainer.vue";
-import business from "../network/index.js";
+import MainContainerVue from "../Common/MainContainer.vue";
+import business from "../../network/index";
 
 export default {
   components: {
@@ -28,7 +27,7 @@ export default {
   },
   data() {
     return {
-      categoryId: 0,
+      categoryId: this.$route.params.id,
       categoryList: []
     };
   },
@@ -58,17 +57,13 @@ export default {
           console.log(err);
         });
     },
-    toSubcategory(id) {
-      this.categoryId = id;
-      this.$router.push("/category/" + id);
-    },
     getcategoryList() {
       business
         .categoryList({
           categoryId: this.categoryId
         })
         .then(res => {
-          // console.log(res.data.data)
+          console.log(res.data);
           if (res.data.status === 0) {
             this.categoryList = res.data.data;
           }
