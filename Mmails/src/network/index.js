@@ -64,11 +64,11 @@ let productSoldOut = (value) => {
 }
 //更新商品接口
 let productUpdate = (value) => {
-    return dispatchMethod(config.method.POST, config.path.productSaveUpdate, `?categoryId=${value.productId}&&name=${value.name}&&subtitle=${value.subtitle}&&detail=${value.detail}&&price=${value.price}&&stock=${value.stock}&&status=${value.status}&&id=${value.id}`)
+    return dispatchMethod(config.method.POST, config.path.productSaveUpdate, `?categoryId=${value.categoryId}&&name=${value.name}&&subtitle=${value.subtitle}&&detail=${value.detail}&&subImages=${value.subImages}&&price=${value.price}&&stock=${value.stock}&&status=${value.status}&&id=${value.id}`)
 }
 //添加商品接口
 let productSave = (value) => {
-    return dispatchMethod(config.method.POST, config.path.productSaveUpdate, `?categoryId=${value.productId}&&name=${value.name}&&subtitle=${value.subtitle}&&detail=${value.detail}&&price=${value.price}&&stock=${value.stock}&&status=${value.status}`)
+    return dispatchMethod(config.method.POST, config.path.productSaveUpdate, `?categoryId=${value.categoryId}&&name=${value.name}&&subtitle=${value.subtitle}&&detail=${value.detail}&&subImages=${value.subImages}&&price=${value.price}&&stock=${value.stock}&&status=${value.status}`)
 }
 
 

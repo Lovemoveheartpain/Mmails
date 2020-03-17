@@ -2,12 +2,12 @@
   <MainContainerVue>
     <span slot="name">商品管理 -- 修改商品</span>
     <div slot="container">
-      <table class="table_big">
+      <table class="table_big" border>
         <tr>
           <td>商品名称</td>
           <td>
             <el-col :xs="24" :sm="24" :md="12" :lg="12">
-              <el-input v-model="item.name" placeholder="请输入内容"></el-input>
+              <el-input v-model="fromItem.name" placeholder="请输入内容"></el-input>
             </el-col>
           </td>
         </tr>
@@ -15,14 +15,14 @@
           <td>商品描述</td>
           <td>
             <el-col :xs="24" :sm="24" :md="12" :lg="12">
-              <el-input v-model="item.subtitle" placeholder="请输入内容"></el-input>
+              <el-input v-model="fromItem.subtitle" placeholder="请输入内容"></el-input>
             </el-col>
           </td>
         </tr>
         <tr>
           <td>所属分类</td>
           <td>
-            <el-select v-model="value" placeholder="请选择">
+            <el-select v-model="fromItem.categoryId" placeholder="请选择">
               <el-option
                 v-for="(item, index) in classList"
                 :key="index"
@@ -36,7 +36,7 @@
           <td>商品价格</td>
           <td>
             <el-col :xs="24" :sm="24" :md="8" :lg="8">
-              <el-input type="number" placeholder="请输入内容" v-model="item.price">
+              <el-input type="number" placeholder="请输入内容" v-model="fromItem.price">
                 <template slot="append">元</template>
               </el-input>
             </el-col>
@@ -46,7 +46,7 @@
           <td>商品库存</td>
           <td>
             <el-col :xs="24" :sm="24" :md="8" :lg="8">
-              <el-input type="number" placeholder="请输入内容" v-model="item.stock">
+              <el-input type="number" placeholder="请输入内容" v-model="fromItem.stock">
                 <template slot="append">件</template>
               </el-input>
             </el-col>
@@ -75,8 +75,14 @@
               type="textarea"
               :autosize="{ minRows: 2, maxRows: 4}"
               placeholder="请输入内容"
-              v-model="item.detail"
+              v-model="fromItem.detail"
             ></el-input>
+          </td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>
+            <el-button size="small" type="primary" @click="changeCommodity">提交</el-button>
           </td>
         </tr>
       </table>
@@ -94,24 +100,42 @@ export default {
   data() {
     return {
       id: this.$route.params.id,
-      item: {},
-      value: "",
+      fromItem: {
+        name: "",
+        subtitle: "",
+        categoryId: "",
+        detail: "",
+        price: "",
+        stock: "",
+        status: "",
+        id: ""
+      },
       classList: [],
       fileList: []
     };
   },
   methods: {
+    getInit(ele) {
+      this.fromItem.name = ele.name;
+      this.fromItem.subtitle = ele.subtitle;
+      this.fromItem.categoryId = ele.categoryId;
+      this.fromItem.detail = ele.detail;
+      this.fromItem.price = ele.price;
+      this.fromItem.stock = ele.stock;
+      this.fromItem.status = ele.status;
+      this.fromItem.id = ele.id;
+    },
     getDetails() {
       business
         .productDetails({
           productId: this.id
         })
         .then(res => {
-          this.item = res.data.data;
-          console.log(this.item);
+          // console.log(res.data.data);
+          this.getInit(res.data.data);
           let obj = {};
           obj.name = "test.jpg";
-          obj.url = this.item.imageHost + this.item.mainImage;
+          obj.url = res.data.data.imageHost + res.data.data.mainImage;
           this.fileList.push(obj);
           this.getClassList();
         })
@@ -125,12 +149,8 @@ export default {
           categoryId: 0
         })
         .then(res => {
+          // console.log(res.data.data);
           this.classList = res.data.data;
-          this.classList.forEach(element => {
-            if (this.item.parentCategoryId === element.id) {
-              this.value = element.name;
-            }
-          });
         })
         .catch(err => {
           console.log(err);
@@ -141,8 +161,23 @@ export default {
     },
     handlePreview(file) {
       console.log(file);
+    },
+    changeCommodity() {
+      // console.log(this.fromItem);
+      business
+        .productUpdate(this.fromItem)
+        .then(res => {
+          if (res.data.status == 0) {
+            alert(res.data.data);
+            this.$router.push("/category");
+          }
+        })
+        .catch(err => {
+          console.log(err);
+        });
     }
   },
+
   mounted() {
     this.getDetails();
   }

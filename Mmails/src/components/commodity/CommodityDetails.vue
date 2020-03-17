@@ -65,6 +65,7 @@
           <td>
             <el-col :xs="24" :sm="24" :md="12" :lg="12">
               <img class="details_img" :src="item.imageHost+item.mainImage" alt />
+              <img class="details_img" :src="item.imageHost+item.subImages" alt />
             </el-col>
           </td>
         </tr>
