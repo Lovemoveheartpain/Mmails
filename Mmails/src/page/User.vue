@@ -8,7 +8,9 @@
           <el-table-column prop="username" label="用户名"></el-table-column>
           <el-table-column prop="email" label="邮箱"></el-table-column>
           <el-table-column prop="phone" label="电话"></el-table-column>
-          <el-table-column prop="createTime" label="注册时间"></el-table-column>
+          <el-table-column prop="createTime" label="注册时间">
+            <span slot-scope="scope">{{scope.row.createTime | transitionTime}}</span>
+          </el-table-column>
         </el-table>
         <el-pagination
           background
@@ -40,6 +42,13 @@ export default {
       total: 0
     };
   },
+  filters: {
+    transitionTime(val) {
+      let newDate = new Date();
+      newDate.setTime(val);
+      return newDate.toLocaleString();
+    }
+  },
   methods: {
     getuserList() {
       business
@@ -50,11 +59,11 @@ export default {
         .then(res => {
           console.log(res.data);
           if (res.data.status === 0) {
-            let newDate = new Date();
-            res.data.data.list.forEach(element => {
-              newDate.setTime(element.createTime);
-              element.createTime = newDate.toLocaleString();
-            });
+            // let newDate = new Date();
+            // res.data.data.list.forEach(element => {
+            //   newDate.setTime(element.createTime);
+            //   element.createTime = newDate.toLocaleString();
+            // });
             this.userList = res.data.data.list;
             this.total = res.data.data.total;
           }
