@@ -64,8 +64,10 @@
           <td>商品图片</td>
           <td>
             <el-col :xs="24" :sm="24" :md="12" :lg="12">
-              <img class="details_img" :src="item.imageHost+item.mainImage" alt />
-              <img class="details_img" :src="item.imageHost+item.subImages" alt />
+              <!-- <img class="details_img" :src="item.imageHost+item.mainImage" alt /> -->
+              <div class="details_img">
+                <img :src="item.imageHost+item.subImages" alt />
+              </div>
             </el-col>
           </td>
         </tr>
@@ -103,7 +105,7 @@ export default {
         })
         .then(res => {
           this.item = res.data.data;
-          console.log(this.item)
+          console.log(this.item);
           this.getClassList();
         })
         .catch(err => {
@@ -158,11 +160,16 @@ export default {
   line-height: 35px;
 }
 .details_img {
-  width: 80px;
+  width: 80px !important;
   height: 80px;
+  border: 1px solid gray;
 }
-.details_div :first-child {
-  width: 80px;
-  height: 80px;
+.details_img > img {
+  width: 100%;
+  height: 100%;
+}
+.details_div
+{
+  width: 60vw;
 }
 </style>

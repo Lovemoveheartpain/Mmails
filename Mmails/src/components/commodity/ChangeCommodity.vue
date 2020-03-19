@@ -2,7 +2,7 @@
   <MainContainerVue>
     <span slot="name">商品管理 -- 修改商品</span>
     <div slot="container">
-      <table class="table_big" border>
+      <table class="table_big">
         <tr>
           <td>商品名称</td>
           <td>
@@ -22,9 +22,24 @@
         <tr>
           <td>所属分类</td>
           <td>
-            <el-select v-model="fromItem.categoryId" placeholder="请选择">
+            <el-select v-model="firstName" placeholder="请选择" @change="selected_one">
+              <el-option label="请选择一级品类" value="0"></el-option>
               <el-option
                 v-for="(item, index) in classList"
+                :key="index"
+                :label="item.name"
+                :value="item.id"
+              ></el-option>
+            </el-select>
+            <el-select
+              v-model="secondName"
+              placeholder="请选择"
+              @change="selected_two"
+              v-show="isShow"
+            >
+              <el-option label="请选择二级品类" value="0"></el-option>
+              <el-option
+                v-for="(item, index) in secondList"
                 :key="index"
                 :label="item.name"
                 :value="item.id"
@@ -55,28 +70,34 @@
         <tr>
           <td>商品图片</td>
           <td>
-            <el-col :xs="24" :sm="24" :md="12" :lg="12">
+            <el-col :xs="24" :sm="24" :md="24" :lg="24">
               <el-upload
-                action="https://jsonplaceholder.typicode.com/posts/"
-                :on-preview="handlePreview"
-                :on-remove="handleRemove"
                 :file-list="fileList"
+                name="upload_file"
+                action="/ask/product/upload.do"
                 list-type="picture-card"
+                :on-preview="handlePictureCardPreview"
+                :on-remove="handleRemove"
+                :on-success="success"
               >
-                <el-button size="small" type="primary">点击上传</el-button>
+                <i class="el-icon-plus"></i>
               </el-upload>
+              <el-dialog :visible.sync="dialogVisible">
+                <img width="100%" :src="dialogImageUrl" alt />
+              </el-dialog>
             </el-col>
           </td>
         </tr>
         <tr>
-          <td>商品详情</td>
+          <td valign="top">商品详情</td>
           <td>
-            <el-input
-              type="textarea"
-              :autosize="{ minRows: 2, maxRows: 4}"
-              placeholder="请输入内容"
+            <quill-editor
+              ref="myQuillEditor"
               v-model="fromItem.detail"
-            ></el-input>
+              :options="editorOption"
+              @ready="onEditorReady($event)"
+              @change="onEditorChange($event)"
+            />
           </td>
         </tr>
         <tr>
@@ -93,9 +114,15 @@
 <script>
 import MainContainerVue from "../Common/MainContainer.vue";
 import business from "../../network";
+import quillConfig from "../../Util/quill-config.js";
 export default {
   components: {
     MainContainerVue
+  },
+  computed: {
+    editor() {
+      return this.$refs.myQuillEditor.quill;
+    }
   },
   data() {
     return {
@@ -108,13 +135,35 @@ export default {
         price: "",
         stock: "",
         status: "",
-        id: ""
+        id: "",
+        subImages: ""
       },
+      dialogImageUrl: "",
+      dialogVisible: false,
       classList: [],
-      fileList: []
+      secondList: [],
+      fileList: [],
+      editorOption: quillConfig,
+      secondName: "",
+      firstName: "",
+      isShow: false
     };
   },
   methods: {
+    selected_one(val) {
+      this.fromItem.categoryId = val;
+      this.secondName = "请选择二级品类";
+      this.getClassList(val);
+    },
+    selected_two(val) {
+      if (val != 0) {
+        this.fromItem.categoryId = val;
+      }
+    },
+    success(val) {
+      console.log(val);
+      this.fromItem.subImages = val.data.uri;
+    },
     getInit(ele) {
       this.fromItem.name = ele.name;
       this.fromItem.subtitle = ele.subtitle;
@@ -124,6 +173,14 @@ export default {
       this.fromItem.stock = ele.stock;
       this.fromItem.status = ele.status;
       this.fromItem.id = ele.id;
+      let obj = {};
+      obj.name = ele.mainImage;
+      obj.url = ele.imageHost + ele.mainImage;
+      this.fileList.push(obj);
+    },
+    handlePictureCardPreview(file) {
+      this.dialogImageUrl = file.url;
+      this.dialogVisible = true;
     },
     getDetails() {
       business
@@ -131,26 +188,39 @@ export default {
           productId: this.id
         })
         .then(res => {
-          // console.log(res.data.data);
           this.getInit(res.data.data);
-          let obj = {};
-          obj.name = "test.jpg";
-          obj.url = res.data.data.imageHost + res.data.data.mainImage;
-          this.fileList.push(obj);
-          this.getClassList();
+          this.getClassList(res.data.data.parentCategoryId);
         })
         .catch(err => {
           console.log(err);
         });
     },
-    getClassList() {
+    getClassList(val) {
       business
         .categoryList({
-          categoryId: 0
+          categoryId: val
         })
         .then(res => {
-          // console.log(res.data.data);
-          this.classList = res.data.data;
+          if (val == 0) {
+            this.classList = res.data.data;
+          } else {
+            this.classList.forEach(element => {
+              if (element.id == val) {
+                this.firstName = element.name;
+              }
+            });
+            this.secondList = res.data.data;
+            this.secondList.forEach(element => {
+              if (element.id == this.fromItem.categoryId) {
+                this.secondName = element.name;
+              }
+            });
+            if (this.secondList.length > 0) {
+              this.isShow = true;
+            } else {
+              this.isShow = false;
+            }
+          }
         })
         .catch(err => {
           console.log(err);
@@ -162,23 +232,30 @@ export default {
     handlePreview(file) {
       console.log(file);
     },
+    onEditorReady(quill) {
+      console.log("editor ready!", quill);
+    },
+    onEditorChange({ quill, html, text }) {
+      this.fromItem.detail = html;
+    },
     changeCommodity() {
-      // console.log(this.fromItem);
-      business
-        .productUpdate(this.fromItem)
-        .then(res => {
-          if (res.data.status == 0) {
-            alert(res.data.data);
-            this.$router.push("/category");
-          }
-        })
-        .catch(err => {
-          console.log(err);
-        });
+      console.log(this.fromItem);
+      // business
+      //   .productUpdate(this.fromItem)
+      //   .then(res => {
+      //     if (res.data.status == 0) {
+      //       alert(res.data.data);
+      //       this.$router.push("/commodity");
+      //     }
+      //   })
+      //   .catch(err => {
+      //     console.log(err);
+      //   });
     }
   },
 
   mounted() {
+    this.getClassList(0);
     this.getDetails();
   }
 };
@@ -211,8 +288,7 @@ export default {
   width: 80px;
   height: 80px;
 }
-.details_div :first-child {
-  width: 80px;
-  height: 80px;
+.details_div {
+  width: 60vw;
 }
 </style>

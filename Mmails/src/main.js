@@ -8,11 +8,18 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css';
 // import element from './element_ui/index'
 // Vue.use(element)
+import VueQuillEditor from 'vue-quill-editor'
+
+import 'quill/dist/quill.core.css' // import styles
+import 'quill/dist/quill.snow.css' // for snow theme
+import 'quill/dist/quill.bubble.css' // for bubble theme
+
 import times from './Util/times';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 Vue.use(ElementUI);
 Vue.use(times);
+Vue.use(VueQuillEditor)
 Vue.config.productionTip = false
 
 /* eslint-disable no-new */
