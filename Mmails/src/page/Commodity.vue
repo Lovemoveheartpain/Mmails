@@ -60,7 +60,6 @@ export default {
   },
   data() {
     return {
-      currentPage: 1,
       currentSize: 10,
       commodityList: [],
       total: 0,
@@ -69,6 +68,11 @@ export default {
         region: ""
       }
     };
+  },
+  computed: {
+    currentPage() {
+      return this.$store.state.commodityNumber;
+    }
   },
   methods: {
     changeStatus(item) {
@@ -81,7 +85,7 @@ export default {
         .then(res => {
           if (res.data.status == 0) {
             alert(res.data.data);
-            this.getCommodityList()
+            this.getCommodityList();
           }
         })
         .catch(err => {
@@ -166,7 +170,7 @@ export default {
       }
     },
     handleCurrentChange(val) {
-      this.currentPage = val;
+      this.$store.commit("setCommodityNumber", val);
       if (this.formInline.commodityId) {
         this.onSubmit();
       } else {

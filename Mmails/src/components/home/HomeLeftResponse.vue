@@ -43,6 +43,17 @@
             <el-menu-item @click="toNewRouter('/user')" index="4-1">用户列表</el-menu-item>
           </el-menu-item-group>
         </el-submenu>
+        <el-submenu index="5">
+          <template slot="title">
+            <i class="el-icon-wallet"></i>
+            <span>图表</span>
+          </template>
+          <el-menu-item-group>
+            <el-menu-item @click="toNewRouter('/echarts')" index="5-1">Echarts</el-menu-item>
+            <el-menu-item @click="toNewRouter('/map')" index="5-2">地图</el-menu-item>
+            <el-menu-item @click="toNewRouter('/international')" index="5-3">国际化</el-menu-item>
+          </el-menu-item-group>
+        </el-submenu>
       </el-menu>
     </el-col>
   </el-aside>
@@ -59,6 +70,9 @@ export default {
     toNewRouter(pagename) {
       if (this.$route.path !== pagename) {
         this.$router.push(pagename);
+        this.$store.commit("setUserNumber", 1);
+        this.$store.commit("setOrderNumber", 1);
+        this.$store.commit("setCommodityNumber", 1);
       } else {
         this.$message("你还在当前页面没有离开");
       }

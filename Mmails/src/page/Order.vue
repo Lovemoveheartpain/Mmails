@@ -54,7 +54,6 @@ export default {
   },
   data() {
     return {
-      currentPage: 1,
       currentSize: 10,
       orderList: [],
       title: ["订单号", "收件人", "订单状态", "订单总价", "创建时间", "操作"],
@@ -64,6 +63,11 @@ export default {
         region: "按订单号查询"
       }
     };
+  },
+  computed: {
+    currentPage() {
+      return this.$store.state.orderNumber;
+    }
   },
   methods: {
     onSubmit() {
@@ -106,11 +110,19 @@ export default {
     },
     handleSizeChange(val) {
       this.currentSize = val;
-      this.getorderList();
+      if (this.formInline.orderId) {
+        this.onSubmit();
+      } else {
+        this.getorderList();
+      }
     },
     handleCurrentChange(val) {
-      this.currentPage = val;
-      this.getorderList();
+      this.$store.commit("setOrderNumber", val);
+      if (this.formInline.orderId) {
+        this.onSubmit();
+      } else {
+        this.getorderList();
+      }
     }
   },
   mounted() {

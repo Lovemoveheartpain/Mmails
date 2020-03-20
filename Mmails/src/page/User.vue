@@ -36,11 +36,15 @@ export default {
   },
   data() {
     return {
-      currentPage: 1,
       currentSize: 10,
       userList: [],
       total: 0
     };
+  },
+  computed: {
+    currentPage() {
+      return this.$store.state.userNumber;
+    }
   },
   filters: {
     transitionTime(val) {
@@ -77,13 +81,13 @@ export default {
       this.getuserList();
     },
     handleCurrentChange(val) {
-      this.currentPage = val;
+      this.$store.commit("setUserNumber", val);
       this.getuserList();
     }
   },
   mounted() {
     this.getuserList();
-  }
+  },
 };
 </script>
 

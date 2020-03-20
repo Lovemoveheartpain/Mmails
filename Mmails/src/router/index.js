@@ -64,6 +64,22 @@ const router = new Router({
           path: '/user',
           name: 'user',
           component: () => import('../page/User.vue'),
+        },
+        {
+          path: '/international',
+          name: 'international',
+          component: () => import('../page/International.vue'),
+        },
+        {
+          path: '/map',
+          name: 'map',
+          component: () => import('../page/Map.vue'),
+
+        },
+        {
+          path: '/echarts',
+          name: 'echarts',
+          component: () => import('../page/Echarts.vue'),
         }
       ]
     },
