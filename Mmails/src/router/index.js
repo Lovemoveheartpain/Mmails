@@ -84,7 +84,7 @@ const router = new Router({
       ]
     },
     {
-      path: '/a',
+      path: '/echarts_Details',
       name: 'echarts_Details',
       component: () => import('../page/Echarts_Details.vue'),
     },
