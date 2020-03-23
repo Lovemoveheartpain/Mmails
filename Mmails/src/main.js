@@ -8,11 +8,14 @@ import 'element-ui/lib/theme-chalk/index.css'
 import 'element-ui/lib/theme-chalk/display.css';
 // import element from './element_ui/index'
 // Vue.use(element)
+import echarts from 'echarts';
 import VueQuillEditor from 'vue-quill-editor'
 
 import 'quill/dist/quill.core.css' // import styles
 import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
+//一般都要加个$加到vue的原型链上，方便引用
+Vue.prototype.$echarts = echarts
 
 import times from './Util/times';
 import ElementUI from 'element-ui';
